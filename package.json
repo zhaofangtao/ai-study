@@ -1,0 +1,45 @@
+{
+  "name": "intelligent-learning-assistant",
+  "version": "1.0.0",
+  "description": "智能学习助手微信小程序版",
+  "main": "main.js",
+  "scripts": {
+    "dev:mp-weixin": "cross-env NODE_ENV=development UNI_PLATFORM=mp-weixin vue-cli-service uni-build --watch",
+    "build:mp-weixin": "cross-env NODE_ENV=production UNI_PLATFORM=mp-weixin vue-cli-service uni-build",
+    "dev:h5": "cross-env NODE_ENV=development UNI_PLATFORM=h5 vue-cli-service uni-serve",
+    "build:h5": "cross-env NODE_ENV=production UNI_PLATFORM=h5 vue-cli-service uni-build",
+    "build:app-plus": "cross-env NODE_ENV=production UNI_PLATFORM=app-plus vue-cli-service uni-build",
+    "serve": "npm run dev:h5",
+    "build": "npm run build:h5",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "微信小程序",
+    "智能学习",
+    "AI助手",
+    "学习工具",
+    "HBuilderX"
+  ],
+  "author": "智能学习助手团队",
+  "license": "MIT",
+  "dependencies": {
+    "@dcloudio/uni-app": "^2.0.0",
+    "@dcloudio/uni-mp-weixin": "^2.0.0",
+    "@dcloudio/uni-h5": "^2.0.0",
+    "vue": "^2.6.11"
+  },
+  "devDependencies": {
+    "@dcloudio/types": "^2.0.0",
+    "@dcloudio/uni-cli-shared": "^2.0.0",
+    "@dcloudio/webpack-uni-mp-loader": "^2.0.0",
+    "cross-env": "^7.0.2",
+    "mini-types": "*"
+  },
+  "browserslist": [
+    "Android >= 4.4",
+    "ios >= 9"
+  ],
+  "uni-app": {
+    "scripts": {}
+  }
+}
