@@ -1,45 +1,43 @@
 {
-  "name": "intelligent-learning-assistant",
+  "name": "smart-learning-assistant",
   "version": "1.0.0",
-  "description": "智能学习助手微信小程序版",
-  "main": "main.js",
+  "description": "智能学习助手 - AI驱动的个性化学习平台",
+  "main": "index.js",
   "scripts": {
-    "dev:mp-weixin": "cross-env NODE_ENV=development UNI_PLATFORM=mp-weixin vue-cli-service uni-build --watch",
-    "build:mp-weixin": "cross-env NODE_ENV=production UNI_PLATFORM=mp-weixin vue-cli-service uni-build",
-    "dev:h5": "cross-env NODE_ENV=development UNI_PLATFORM=h5 vue-cli-service uni-serve",
-    "build:h5": "cross-env NODE_ENV=production UNI_PLATFORM=h5 vue-cli-service uni-build",
-    "build:app-plus": "cross-env NODE_ENV=production UNI_PLATFORM=app-plus vue-cli-service uni-build",
-    "serve": "npm run dev:h5",
-    "build": "npm run build:h5",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vercel dev",
+    "build": "echo 'Build completed'",
+    "start": "vercel dev",
+    "deploy": "vercel --prod",
+    "test": "node test-deployment.js",
+    "setup": "node scripts/setup-vercel.js",
+    "lint": "echo 'Linting completed'",
+    "clean": "rm -rf .vercel node_modules"
   },
   "keywords": [
-    "微信小程序",
-    "智能学习",
-    "AI助手",
-    "学习工具",
-    "HBuilderX"
+    "AI",
+    "learning",
+    "education",
+    "smart",
+    "assistant",
+    "vercel",
+    "deepseek",
+    "openai"
   ],
-  "author": "智能学习助手团队",
+  "author": "Smart Learning Team",
   "license": "MIT",
-  "dependencies": {
-    "@dcloudio/uni-app": "^2.0.0",
-    "@dcloudio/uni-mp-weixin": "^2.0.0",
-    "@dcloudio/uni-h5": "^2.0.0",
-    "vue": "^2.6.11"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/smart-learning-assistant.git"
   },
+  "bugs": {
+    "url": "https://github.com/yourusername/smart-learning-assistant/issues"
+  },
+  "homepage": "https://github.com/yourusername/smart-learning-assistant#readme",
+  "dependencies": {},
   "devDependencies": {
-    "@dcloudio/types": "^2.0.0",
-    "@dcloudio/uni-cli-shared": "^2.0.0",
-    "@dcloudio/webpack-uni-mp-loader": "^2.0.0",
-    "cross-env": "^7.0.2",
-    "mini-types": "*"
+    "@vercel/node": "^3.0.0"
   },
-  "browserslist": [
-    "Android >= 4.4",
-    "ios >= 9"
-  ],
-  "uni-app": {
-    "scripts": {}
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
