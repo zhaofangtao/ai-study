@@ -1,0 +1,330 @@
+<!-- pages/index/index.wxml -->
+<view class="container">
+  <!-- 智能学习仪表板 -->
+  <view class="dashboard">
+    <view class="dashboard-header">
+      <view class="header-left">
+        <view class="logo">🧠</view>
+        <view class="title">智能学习助手</view>
+      </view>
+      <view class="status" style="background: {{apiStatus.color}};">{{apiStatus.text}}</view>
+    </view>
+
+    <view class="dashboard-content">
+      <view class="dashboard-card">
+        <view class="dashboard-icon">📊</view>
+        <view class="dashboard-info">
+          <view class="dashboard-number">{{totalTopics}}</view>
+          <view class="dashboard-label">学习主题</view>
+        </view>
+      </view>
+
+      <view class="dashboard-card">
+        <view class="dashboard-icon">❓</view>
+        <view class="dashboard-info">
+          <view class="dashboard-number">{{totalQuestions}}</view>
+          <view class="dashboard-label">总问题数</view>
+        </view>
+      </view>
+
+      <view class="dashboard-card">
+        <view class="dashboard-icon">✅</view>
+        <view class="dashboard-info">
+          <view class="dashboard-number">{{totalAnswered}}</view>
+          <view class="dashboard-label">已回答</view>
+        </view>
+      </view>
+
+      <view class="dashboard-card">
+        <view class="dashboard-icon">💎</view>
+        <view class="dashboard-info">
+          <view class="dashboard-number">{{userCredits}}</view>
+          <view class="dashboard-label">剩余主题</view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 快速操作按钮 -->
+    <view class="quick-actions">
+      <button class="quick-action-btn" bindtap="showRandomTopic">🎲 随机主题</button>
+      <button class="quick-action-btn" bindtap="exportLearningData">📤 导出数据</button>
+      <button class="quick-action-btn" bindtap="diagnoseNetwork">🔧 网络诊断</button>
+      <button class="quick-action-btn" bindtap="goToWebView">🌐 Web版本</button>
+      <button class="quick-action-btn" bindtap="toggleTestMode">{{testModeText}}</button>
+    </view>
+
+    <!-- 导航按钮 -->
+    <view class="navigation-buttons">
+      <button class="nav-btn" bindtap="goToTopics">
+        <view class="nav-icon">📚</view>
+        <view class="nav-text">主题库</view>
+      </button>
+      <button class="nav-btn" bindtap="goToAchievements">
+        <view class="nav-icon">🏆</view>
+        <view class="nav-text">学习成就</view>
+      </button>
+      <button class="nav-btn" bindtap="goToHistory">
+        <view class="nav-icon">📝</view>
+        <view class="nav-text">学习历史</view>
+      </button>
+      <button class="nav-btn" bindtap="goToSettings">
+        <view class="nav-icon">⚙️</view>
+        <view class="nav-text">设置</view>
+      </button>
+    </view>
+  </view>
+
+  <!-- 学习中心 -->
+  <view class="card">
+    <view class="section-title">开始学习</view>
+    <view class="input-group">
+      <textarea 
+        class="input topic-input" 
+        placeholder="请输入学习主题，如：深度学习基础、Python Web开发、心理学基础..."
+        maxlength="200"
+        value="{{topicInput}}"
+        bindinput="onTopicInput"
+        bindfocus="onTopicFocus"
+        bindblur="onTopicBlur"
+        auto-height
+        show-confirm-bar="{{true}}"
+      ></textarea>
+    </view>
+
+    <!-- 智能推荐 -->
+    <view class="recommendations" wx:if="{{showRecommendations && recommendedTopics.length > 0}}">
+      <view class="recommendations-title">
+        <text class="recommendations-icon">🤖</text>
+        <text>智能推荐</text>
+      </view>
+      <view class="recommendations-list">
+        <view 
+          wx:for="{{recommendedTopics}}" 
+          wx:key="index" 
+          class="recommendation-item"
+          bindtap="selectRecommendedTopic"
+          data-topic="{{item}}"
+        >
+          <text class="recommendation-text">{{item}}</text>
+        </view>
+      </view>
+    </view>
+    <button 
+      class="button" 
+      bindtap="startLearning" 
+      disabled="{{isGenerating}}"
+      style="width: 100%;"
+    >
+      {{startButtonText}}
+    </button>
+  </view>
+
+  <!-- 问题容器 -->
+  <view wx:if="{{showQuestions}}" class="card">
+    <view class="stats">
+      <view class="stat-item">
+        <view class="stat-number">{{currentQuestions.length}}</view>
+        <view class="stat-label">总问题</view>
+      </view>
+      <view class="stat-item">
+        <view class="stat-number">{{answeredCount}}</view>
+        <view class="stat-label">已回答</view>
+      </view>
+      <view class="stat-item">
+        <view class="stat-number">{{progressPercent}}%</view>
+        <view class="stat-label">完成度</view>
+      </view>
+    </view>
+    
+    <view class="section-title">{{currentTopic}} - 学习问题</view>
+    
+    <view class="questions-list">
+      <view 
+        wx:for="{{currentQuestions}}" 
+        wx:key="id" 
+        class="question-card {{item.answered ? 'answered' : ''}} fade-in"
+        style="animation-delay: {{index * 100}}ms;"
+        bindtap="{{item.answered || item.isGenerating ? 'toggleAnswerByCard' : ''}}"
+        data-id="{{item.id}}"
+      >
+        <view class="question-text">{{item.question}}</view>
+        
+        <view class="question-meta">
+          <view class="question-info">问题 #{{item.id}} · {{item.statusText}}</view>
+          <view class="question-actions">
+            <text class="category-badge">{{item.category}}</text>
+            <view class="answer-btn-wrapper">
+              <button 
+                class="answer-btn-compact" 
+                bindtap="toggleAnswer"
+                data-id="{{item.id}}"
+                catchtap="toggleAnswer"
+              >
+                {{item.showAnswer ? '收起' : (item.answer ? '展开' : '回答')}}
+                <view class="status-badge {{item.statusClass}}">{{item.statusIcon}}</view>
+              </button>
+            </view>
+          </view>
+        </view>
+        
+        <!-- 答案容器 -->
+        <view wx:if="{{item.showAnswer}}" class="answer-container">
+          <view wx:if="{{item.answer || item.streamingAnswer}}" class="answer-text">
+            <rich-text nodes="{{item.formattedAnswer || item.streamingAnswer}}"></rich-text>
+            <view wx:if="{{item.isGenerating}}" class="streaming-indicator">
+              <view class="typing-dots">
+                <view class="dot"></view>
+                <view class="dot"></view>
+                <view class="dot"></view>
+              </view>
+            </view>
+          </view>
+          <view wx:elif="{{item.isLocked}}" class="locked-answer">
+            <view class="locked-icon">🔒</view>
+            <view class="locked-text">需要解锁主题访问权限</view>
+            <view class="locked-subtitle">
+              每个主题前3个问题免费，第{{item.id}}个问题需要主题权限\n
+              您可以配置自己的API密钥免费使用所有主题\n
+              或购买主题套餐解锁更多主题\n\n
+              当前状态：已使用 {{usedTopicsCount}} 个主题，剩余 {{remainingTopics}} 个主题
+            </view>
+            <view class="locked-buttons">
+              <button class="unlock-btn" bindtap="showPaymentModal">💎 购买主题套餐</button>
+              <button class="button button-small" bindtap="goToSettings" style="background: #6B7280; margin-top: 30rpx;">
+                ⚙️ 配置API密钥
+              </button>
+            </view>
+          </view>
+          <view wx:elif="{{item.isGenerating}}" class="friendly-loading">
+            <view class="loading-content">
+              <view class="loading-icon">{{item.loadingIcon || '🤔'}}</view>
+              <view class="loading-text">{{item.loadingText || 'AI正在深度思考中'}}</view>
+              <view class="loading-dots">
+                <view class="loading-dot"></view>
+                <view class="loading-dot"></view>
+                <view class="loading-dot"></view>
+              </view>
+              <view class="loading-subtitle">{{item.loadingSubtitle || '正在分析问题并整理最佳答案...'}}</view>
+              <view class="thinking-progress">
+                <view class="thinking-progress-bar"></view>
+              </view>
+            </view>
+          </view>
+          
+          <button wx:if="{{item.answer}}" class="button button-small" bindtap="collapseAnswer" data-id="{{item.id}}" style="margin-top: 20rpx;">
+            📄 收起答案
+          </button>
+        </view>
+      </view>
+    </view>
+    
+    <view class="load-more-actions">
+      <button 
+        class="load-more-btn" 
+        bindtap="loadMoreQuestions"
+        disabled="{{isGenerating}}"
+      >
+        {{loadMoreButtonText}}
+      </button>
+      <button class="scroll-top-btn" bindtap="scrollToTop">⬆️ 回到顶部</button>
+    </view>
+  </view>
+</view>
+
+<!-- 付费模态框 -->
+<view wx:if="{{showPaymentModal}}" class="payment-modal" bindtap="closePaymentModal">
+  <view class="payment-content" catchtap="true">
+    <view class="payment-title">💎 解锁AI回答</view>
+    <view class="payment-subtitle">
+      获取专业AI回答，深度学习无限制\n
+      支持微信/支付宝付款，安全便捷
+    </view>
+
+    <!-- 主题信息 -->
+    <view class="credits-info">
+      <view class="credits-number">{{userCredits}}</view>
+      <view class="credits-label">剩余主题</view>
+    </view>
+
+    <!-- 付费选项 -->
+    <view class="payment-tabs">
+      <view 
+        wx:for="{{paymentPackages}}" 
+        wx:key="key"
+        class="payment-tab {{item.key === currentPaymentPackage ? 'active' : ''}}"
+        bindtap="selectPaymentOption"
+        data-package="{{item.key}}"
+      >
+        {{item.name}}\n
+        <text style="font-size: 24rpx;">{{item.topics}}个主题 - ¥{{item.price}}</text>
+      </view>
+    </view>
+
+    <!-- 支付方式 -->
+    <view class="payment-tabs">
+      <view 
+        class="payment-tab {{currentPaymentMethod === 'wechat' ? 'active' : ''}}"
+        bindtap="selectPaymentMethod"
+        data-method="wechat"
+      >
+        💚 微信支付
+      </view>
+      <view 
+        class="payment-tab {{currentPaymentMethod === 'alipay' ? 'active' : ''}}"
+        bindtap="selectPaymentMethod"
+        data-method="alipay"
+      >
+        💙 支付宝
+      </view>
+    </view>
+
+    <!-- 二维码区域 -->
+    <view class="qr-container">
+      <view class="qr-code">
+        <image wx:if="{{currentQrCode}}" src="{{currentQrCode}}" class="qr-image" mode="aspectFit"></image>
+        <view wx:else style="text-align: center;">
+          <view style="font-size: 96rpx; margin-bottom: 20rpx;">📱</view>
+          请选择套餐和支付方式
+        </view>
+      </view>
+      <view class="payment-amount">¥{{currentPaymentAmount}}</view>
+      <view class="payment-note">
+        扫码支付后，请输入付款金额进行验证
+      </view>
+    </view>
+
+    <!-- 验证区域 -->
+    <view style="margin-bottom: 30rpx;">
+      <input 
+        class="input" 
+        placeholder="请输入支付订单号或交易流水号"
+        value="{{paymentOrderId}}"
+        bindinput="onPaymentOrderIdInput"
+      />
+      <view style="font-size: 24rpx; color: #6B7280; margin-top: 10rpx;">
+        💡 在支付完成页面或支付记录中可以找到订单号
+      </view>
+    </view>
+    
+    <input 
+      class="input" 
+      type="digit"
+      placeholder="请输入实际付款金额（如：1.9）"
+      value="{{paymentVerification}}"
+      bindinput="onPaymentVerificationInput"
+    />
+
+    <button class="button" bindtap="verifyPayment" style="width: 100%; margin-top: 30rpx;">
+      ✅ 验证付款并充值主题
+    </button>
+
+    <view style="font-size: 24rpx; color: #6B7280; margin-top: 30rpx; line-height: 1.5;">
+      💡 如何获取订单号：\n
+      • 微信支付：在"微信支付"小程序中查看交易记录\n
+      • 支付宝：在支付宝"账单"中查看交易详情\n
+      • 订单号通常以数字或字母开头，长度10-20位\n\n
+      🔒 每个订单号只能使用一次，确保交易安全\n
+      📞 如有问题请联系客服：微信 tiantangyanse
+    </view>
+  </view>
+</view>

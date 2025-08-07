@@ -1,0 +1,28 @@
+{
+  "name": "smart-learning-assistant",
+  "version": "1.0.0",
+  "description": "AI驱动的智能学习助手应用",
+  "main": "main.js",
+  "scripts": {
+    "dev:app": "uni build --watch",
+    "build:app": "uni build",
+    "dev:h5": "uni serve",
+    "build:h5": "uni build --platform h5"
+  },
+  "keywords": [
+    "uni-app",
+    "智能学习",
+    "AI助手",
+    "教育"
+  ],
+  "author": "智能学习助手团队",
+  "license": "MIT",
+  "dependencies": {
+    "@dcloudio/uni-app": "^3.0.0",
+    "vue": "^3.0.0"
+  },
+  "devDependencies": {
+    "@dcloudio/uni-cli-shared": "^3.0.0",
+    "@dcloudio/webpack-uni-mp-loader": "^3.0.0"
+  }
+}

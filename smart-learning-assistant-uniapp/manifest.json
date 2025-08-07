@@ -1,0 +1,76 @@
+{
+    "name" : "问AI智学宝",
+    "appid" : "__UNI__690EABA",
+    "description" : "一款让AI帮你提问让AI帮解答的AI学习知识助手",
+    "versionName" : "1.0.1",
+    "versionCode" : 101,
+    "transformPx" : false,
+    "app-plus" : {
+        "usingComponents" : true,
+        "nvueStyleCompiler" : "uni-app",
+        "compilerVersion" : 3,
+        "splashscreen" : {
+            "alwaysShowBeforeRender" : true,
+            "waiting" : true,
+            "autoclose" : true,
+            "delay" : 0
+        },
+        "modules" : {},
+        "distribute" : {
+            "android" : {
+                "permissions" : [
+                    "<uses-permission android:name=\"android.permission.CHANGE_NETWORK_STATE\" />",
+                    "<uses-permission android:name=\"android.permission.MOUNT_UNMOUNT_FILESYSTEMS\" />",
+                    "<uses-permission android:name=\"android.permission.VIBRATE\" />",
+                    "<uses-permission android:name=\"android.permission.READ_PHONE_STATE\" />",
+                    "<uses-permission android:name=\"android.permission.INTERNET\" />",
+                    "<uses-permission android:name=\"android.permission.ACCESS_NETWORK_STATE\" />",
+                    "<uses-permission android:name=\"android.permission.ACCESS_WIFI_STATE\" />",
+                    "<uses-permission android:name=\"android.permission.WRITE_EXTERNAL_STORAGE\" />",
+                    "<uses-permission android:name=\"android.permission.READ_EXTERNAL_STORAGE\" />"
+                ]
+            },
+            "ios" : {
+                "dSYMs" : false
+            },
+            "sdkConfigs" : {},
+            "icons" : {
+                "android" : {
+                    "hdpi" : "F:/迅雷下载/微信图片_20250729163313.png",
+                    "xhdpi" : "F:/迅雷下载/微信图片_20250729163313.png",
+                    "xxhdpi" : "F:/迅雷下载/微信图片_20250729163313.png",
+                    "xxxhdpi" : "F:/迅雷下载/微信图片_20250729163313.png"
+                },
+                "ios" : {
+                    "ipad" : {
+                        "app" : "F:/迅雷下载/微信图片_20250729163313.png",
+                        "app@2x" : "F:/迅雷下载/微信图片_20250729163313.png",
+                        "proapp@2x" : "F:/迅雷下载/微信图片_20250729163313.png",
+                        "spotlight@2x" : "F:/迅雷下载/微信图片_20250729163313.png"
+                    }
+                }
+            }
+        }
+    },
+    "quickapp" : {},
+    "mp-weixin" : {
+        "appid" : "",
+        "setting" : {
+            "urlCheck" : false
+        },
+        "usingComponents" : true
+    },
+    "mp-alipay" : {
+        "usingComponents" : true
+    },
+    "mp-baidu" : {
+        "usingComponents" : true
+    },
+    "mp-toutiao" : {
+        "usingComponents" : true
+    },
+    "uniStatistics" : {
+        "enable" : false
+    },
+    "vueVersion" : "3"
+}

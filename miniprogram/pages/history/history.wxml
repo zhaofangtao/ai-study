@@ -1,0 +1,68 @@
+<!-- pages/history/history.wxml -->
+<view class="container">
+  <view class="card">
+    <view class="section-title">📝 学习历史</view>
+    
+    <!-- 快速操作按钮 -->
+    <view class="history-top-actions">
+      <button class="history-action-btn" bindtap="exportLearningData">📤 导出数据</button>
+      <button class="history-action-btn" bindtap="clearAllData">🗑️ 清空数据</button>
+    </view>
+    
+    <!-- 学习记录部分 -->
+    <view style="margin-bottom: 60rpx;">
+      <view style="font-size: 32rpx; font-weight: 600; color: #1F2937; margin-bottom: 30rpx;">💾 学习主题记录</view>
+      <view class="cache-info">💡 所有学习记录都保存在本地，方便随时复习</view>
+      
+      <view wx:if="{{cacheList.length === 0}}" style="text-align: center; color: #6B7280; padding: 80rpx;">
+        暂无学习记录
+      </view>
+      
+      <view wx:for="{{cacheList}}" wx:key="topic" class="history-item">
+        <view style="display: flex; justify-content: space-between; align-items: center;">
+          <view>
+            <view class="history-question">{{item.topic}}</view>
+            <view style="font-size: 24rpx; color: #6B7280;">
+              {{item.questionCount}}个问题 · {{item.answeredCount}}个已回答 · {{item.lastUpdated}}
+            </view>
+          </view>
+          <view class="history-item-actions">
+            <button class="history-btn" bindtap="loadCachedTopic" data-topic="{{item.topic}}">📖 加载</button>
+            <button class="history-btn history-btn-danger" bindtap="deleteCachedTopic" data-topic="{{item.topic}}">🗑️ 删除</button>
+          </view>
+        </view>
+      </view>
+    </view>
+    
+    <!-- 问答历史部分 -->
+    <view>
+      <view style="font-size: 32rpx; font-weight: 600; color: #1F2937; margin-bottom: 30rpx;">📚 问答历史记录</view>
+      <view class="cache-info">📚 查看所有问题和答案的详细历史记录</view>
+      
+      <view wx:if="{{historyList.length === 0}}" style="text-align: center; color: #6B7280; padding: 80rpx;">
+        暂无问答历史
+      </view>
+      
+      <view wx:for="{{historyList}}" wx:key="index" class="history-item">
+        <view 
+          class="history-question" 
+          bindtap="toggleHistoryAnswer" 
+          data-index="{{index}}"
+          style="cursor: pointer;"
+        >
+          <text style="margin-right: 16rpx;">Q:</text>
+          <text>{{item.question}}</text>
+          <text class="history-toggle" style="float: right; color: #6B7280;">{{item.showAnswer ? '▲' : '▼'}}</text>
+        </view>
+        
+        <view wx:if="{{item.showAnswer}}" class="history-answer">
+          <rich-text nodes="{{item.formattedAnswer}}"></rich-text>
+        </view>
+        
+        <view class="history-meta">
+          主题: {{item.topic}} · {{item.formattedTime}}
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

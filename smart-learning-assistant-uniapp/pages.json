@@ -1,0 +1,19 @@
+{
+	"pages": [
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "智学宝",
+				"navigationBarBackgroundColor": "#f8fafc",
+				"navigationBarTextStyle": "black"
+			}
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "智学宝",
+		"navigationBarBackgroundColor": "#f8fafc",
+		"backgroundColor": "#f8fafc"
+	},
+	"uniIdRouter": {}
+}

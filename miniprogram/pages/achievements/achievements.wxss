@@ -1,0 +1,301 @@
+/* pages/achievements/achievements.wxss */
+.container {
+  padding: 20rpx;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+}
+
+/* 页面标题 */
+.header {
+  text-align: center;
+  margin-bottom: 30rpx;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10rpx;
+}
+
+.logo {
+  font-size: 48rpx;
+  margin-right: 15rpx;
+}
+
+.title-text {
+  font-size: 42rpx;
+  font-weight: bold;
+  color: white;
+}
+
+.subtitle {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 28rpx;
+}
+
+/* 统计概览 */
+.stats-overview {
+  margin-bottom: 30rpx;
+}
+
+.stats-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20rpx;
+  padding: 30rpx;
+  display: flex;
+  justify-content: space-around;
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.1);
+}
+
+.stats-item {
+  text-align: center;
+}
+
+.stats-number {
+  font-size: 48rpx;
+  font-weight: bold;
+  color: #1E3A8A;
+  margin-bottom: 8rpx;
+}
+
+.stats-label {
+  font-size: 24rpx;
+  color: #6B7280;
+}
+
+/* 成就进度 */
+.achievement-progress {
+  margin-bottom: 30rpx;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15rpx;
+  color: white;
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+.section-title-white {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15rpx;
+  color: white;
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+.section-icon {
+  margin-right: 10rpx;
+  font-size: 36rpx;
+}
+
+.progress-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 15rpx;
+  padding: 25rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
+}
+
+.progress-card-full {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20rpx;
+  padding: 30rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.progress-info-full {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.progress-text {
+  font-size: 28rpx;
+  color: #374151;
+  margin-bottom: 15rpx;
+  display: block;
+}
+
+.progress-text-full {
+  font-size: 32rpx;
+  color: #374151;
+  margin-bottom: 20rpx;
+  text-align: center;
+  font-weight: bold;
+}
+
+.progress-bar {
+  height: 12rpx;
+  background: #E5E7EB;
+  border-radius: 6rpx;
+  overflow: hidden;
+}
+
+.progress-bar-full {
+  height: 16rpx;
+  background: #E5E7EB;
+  border-radius: 8rpx;
+  overflow: hidden;
+  width: 100%;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #10B981, #059669);
+  border-radius: 6rpx;
+  transition: width 0.3s ease;
+}
+
+.progress-fill-full {
+  height: 100%;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  border-radius: 8rpx;
+  transition: width 0.3s ease;
+}
+
+/* 成就列表 */
+.achievements-section {
+  margin-bottom: 30rpx;
+}
+
+.achievements-list {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20rpx;
+  overflow: hidden;
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.1);
+}
+
+.achievement-item {
+  display: flex;
+  align-items: center;
+  padding: 25rpx;
+  border-bottom: 1rpx solid #F3F4F6;
+  transition: background-color 0.2s ease;
+}
+
+.achievement-item:last-child {
+  border-bottom: none;
+}
+
+.achievement-item.unlocked {
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.achievement-item.locked {
+  opacity: 0.6;
+}
+
+.achievement-item:active {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.achievement-icon {
+  font-size: 48rpx;
+  margin-right: 20rpx;
+  width: 60rpx;
+  text-align: center;
+}
+
+.achievement-info {
+  flex: 1;
+}
+
+.achievement-name {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #1F2937;
+  margin-bottom: 5rpx;
+}
+
+.achievement-desc {
+  font-size: 26rpx;
+  color: #6B7280;
+  margin-bottom: 10rpx;
+}
+
+.achievement-progress {
+  display: flex;
+  align-items: center;
+  gap: 10rpx;
+}
+
+.progress-bar-small {
+  flex: 1;
+  height: 8rpx;
+  background: #E5E7EB;
+  border-radius: 4rpx;
+  overflow: hidden;
+}
+
+.progress-fill-small {
+  height: 100%;
+  background: linear-gradient(90deg, #3B82F6, #1D4ED8);
+  border-radius: 4rpx;
+  transition: width 0.3s ease;
+}
+
+.progress-text-small {
+  font-size: 22rpx;
+  color: #6B7280;
+  min-width: 80rpx;
+}
+
+.achievement-status {
+  margin-left: 15rpx;
+}
+
+.status-unlocked {
+  color: #10B981;
+  font-size: 32rpx;
+  font-weight: bold;
+}
+
+.status-locked {
+  color: #9CA3AF;
+  font-size: 28rpx;
+}
+
+/* 操作按钮 */
+.actions {
+  display: flex;
+  justify-content: center;
+  margin-top: 30rpx;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20rpx 40rpx;
+  border-radius: 25rpx;
+  font-size: 28rpx;
+  font-weight: bold;
+  border: none;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+.reset-btn {
+  background: linear-gradient(135deg, #FEF2F2 0%, #FECACA 100%);
+  color: #991B1B;
+  border: 1rpx solid rgba(239, 68, 68, 0.2);
+  box-shadow: 0 3rpx 15rpx rgba(239, 68, 68, 0.15);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.reset-btn:active {
+  transform: translateY(1rpx);
+  box-shadow: 0 2rpx 8rpx rgba(239, 68, 68, 0.2);
+  background: linear-gradient(135deg, #FECACA 0%, #FCA5A5 100%);
+}
+
+.btn-icon {
+  margin-right: 10rpx;
+  font-size: 32rpx;
+}

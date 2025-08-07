@@ -1,0 +1,11 @@
+{
+  "version": "0.0",
+  "configurations": [
+    {
+      "type": "miniProgram",
+      "name": "微信小程序",
+      "request": "launch",
+      "platform": "mp-weixin"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+<!-- pages/topics/topics.wxml -->
+<view class="container">
+  <view class="card">
+    <view class="section-title">📚 各行各业学习主题库</view>
+    
+    <view wx:for="{{industryList}}" wx:key="name" class="industry-container">
+      <view 
+        class="industry-header" 
+        bindtap="toggleIndustry" 
+        data-industry="{{item.name}}"
+      >
+        <view class="industry-title">{{item.name}}</view>
+        <view class="industry-toggle {{item.expanded ? 'expanded' : ''}}">▼</view>
+      </view>
+      
+      <view wx:if="{{item.expanded}}" class="industry-topics expanded">
+        <view 
+          wx:for="{{item.topics}}" 
+          wx:key="*this"
+          wx:for-item="topic"
+          class="topic-item {{getCachedClass(topic)}}"
+          bindtap="selectTopic"
+          data-topic="{{topic}}"
+        >
+          {{topic}}
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,183 @@
+/* pages/settings/settings.wxss */
+
+/* 设置页面专用的提供商按钮 - 一行排列 */
+.settings-provider-buttons {
+  display: flex;
+  gap: 12rpx;
+  margin-bottom: 30rpx;
+  flex-wrap: wrap;
+}
+
+.settings-provider-btn {
+  flex: 1;
+  padding: 20rpx 16rpx;
+  border: 4rpx solid #E5E7EB;
+  background: #F9FAFB;
+  border-radius: 12rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+  color: #6B7280;
+  text-align: center;
+  transition: all 0.3s ease;
+  min-width: 120rpx;
+}
+
+.settings-provider-btn.active {
+  background: linear-gradient(135deg, #3B82F6 0%, #1E40AF 100%);
+  color: white;
+  border-color: #3B82F6;
+  box-shadow: 0 4rpx 12rpx rgba(59, 130, 246, 0.3);
+  transform: translateY(-1rpx);
+}
+
+.settings-provider-btn:hover {
+  border-color: #3B82F6;
+  background: #F0F9FF;
+}
+
+.settings-provider-btn.active:hover {
+  background: linear-gradient(135deg, #1E40AF, #2563EB);
+}
+
+/* 设置页面操作按钮 - 一行排列 */
+.settings-actions {
+  display: flex;
+  gap: 16rpx;
+  margin-bottom: 30rpx;
+  flex-wrap: wrap;
+}
+
+.settings-action-btn {
+  flex: 1;
+  background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 100%);
+  color: #475569;
+  border: 1rpx solid rgba(148, 163, 184, 0.2);
+  border-radius: 20rpx;
+  padding: 20rpx 16rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+  text-align: center;
+  box-shadow: 0 4rpx 20rpx rgba(148, 163, 184, 0.15);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  min-width: 140rpx;
+  backdrop-filter: blur(20rpx);
+}
+
+.settings-action-btn:active {
+  transform: translateY(1rpx);
+  box-shadow: 0 2rpx 10rpx rgba(148, 163, 184, 0.2);
+  background: linear-gradient(135deg, #F1F5F9 0%, #CBD5E1 100%);
+}
+
+.settings-action-btn:hover {
+  transform: translateY(-2rpx);
+  box-shadow: 0 8rpx 20rpx rgba(16, 185, 129, 0.4);
+}
+
+.settings-action-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2rpx 8rpx rgba(16, 185, 129, 0.3);
+}
+
+/* API操作按钮 */
+.api-actions {
+  display: flex;
+  gap: 16rpx;
+  margin-bottom: 30rpx;
+}
+
+.api-action-btn {
+  flex: 1;
+  border: none;
+  border-radius: 12rpx;
+  padding: 20rpx 16rpx;
+  font-size: 24rpx;
+  font-weight: 500;
+  text-align: center;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.test-btn {
+  background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 100%);
+  color: #065F46;
+  border-color: rgba(16, 185, 129, 0.2);
+  box-shadow: 0 3rpx 15rpx rgba(16, 185, 129, 0.15);
+}
+
+.test-btn:active {
+  transform: scale(0.98);
+  box-shadow: 0 2rpx 8rpx rgba(16, 185, 129, 0.2);
+  background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);
+}
+
+.save-btn {
+  background: linear-gradient(135deg, #EFF6FF 0%, #DBEAFE 100%);
+  color: #1E40AF;
+  border-color: rgba(59, 130, 246, 0.2);
+  box-shadow: 0 3rpx 15rpx rgba(59, 130, 246, 0.15);
+}
+
+.save-btn:active {
+  transform: scale(0.98);
+  box-shadow: 0 2rpx 8rpx rgba(59, 130, 246, 0.2);
+  background: linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%);
+}
+
+/* 输入框对齐修复 */
+.input-group {
+  margin-bottom: 24rpx;
+}
+
+.input-group .label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8rpx;
+  color: #1F2937;
+  font-size: 26rpx;
+  line-height: 1.2;
+}
+
+.input-group .input {
+  width: 100%;
+  padding: 20rpx;
+  border: 2rpx solid #E5E7EB;
+  border-radius: 8rpx;
+  font-size: 26rpx;
+  background: #F9FAFB;
+  box-sizing: border-box;
+  color: #1F2937;
+  line-height: 1.4;
+  min-height: 80rpx;
+}
+
+.input-group .input:focus {
+  border-color: #3B82F6;
+  background: white;
+  outline: none;
+}
+
+/* 响应式设计 */
+@media (max-width: 750rpx) {
+  .settings-provider-buttons {
+    flex-direction: column;
+    gap: 12rpx;
+  }
+  
+  .settings-provider-btn {
+    flex: none;
+    padding: 16rpx;
+    font-size: 22rpx;
+  }
+  
+  .settings-actions {
+    flex-direction: column;
+    gap: 12rpx;
+  }
+  
+  .settings-action-btn {
+    flex: none;
+    padding: 16rpx;
+    font-size: 22rpx;
+  }
+}

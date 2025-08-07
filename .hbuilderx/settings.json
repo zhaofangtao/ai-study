@@ -1,0 +1,30 @@
+{
+  "editor.colorScheme": "Default",
+  "editor.fontSize": 14,
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.wordWrap": "on",
+  "editor.minimap.enabled": true,
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 1000,
+  "emmet.includeLanguages": {
+    "wxml": "html"
+  },
+  "files.associations": {
+    "*.wxml": "html",
+    "*.wxss": "css",
+    "*.wxs": "javascript"
+  },
+  "compile": {
+    "less": {
+      "out": null
+    },
+    "sass": {
+      "out": null
+    }
+  },
+  "weixin": {
+    "devtools": "auto",
+    "projectConfig": "./project.config.json"
+  }
+}

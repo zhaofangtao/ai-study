@@ -1,0 +1,163 @@
+<!-- pages/settings/settings.wxml -->
+<view class="container">
+  <!-- API配置 -->
+  <view class="card">
+    <view class="section-title">🔧 AI API 配置</view>
+    
+    <view class="input-group">
+      <label class="label">选择API提供商：</label>
+      <view class="settings-provider-buttons">
+        <view 
+          wx:for="{{providers}}" 
+          wx:key="key"
+          class="settings-provider-btn {{currentProvider === item.key ? 'active' : ''}}"
+          bindtap="selectProvider"
+          data-provider="{{item.key}}"
+        >
+          {{item.name}}
+        </view>
+      </view>
+    </view>
+    
+    <view class="input-group">
+      <label class="label">API密钥：</label>
+      <input 
+        type="text" 
+        class="input" 
+        placeholder="请输入你的API密钥" 
+        value="{{apiKey}}"
+        bindinput="onApiKeyInput"
+        password="{{true}}"
+      />
+    </view>
+    
+    <view class="input-group">
+      <label class="label">API基础URL：</label>
+      <input 
+        type="text" 
+        class="input" 
+        value="{{baseUrl}}"
+        bindinput="onBaseUrlInput"
+      />
+    </view>
+    
+    <view class="input-group">
+      <label class="label">模型名称：</label>
+      <input 
+        type="text" 
+        class="input" 
+        value="{{model}}"
+        bindinput="onModelInput"
+      />
+    </view>
+    
+    <view class="api-actions">
+      <button class="api-action-btn test-btn" bindtap="testAPI">
+        🧪 测试API连接
+      </button>
+      <button class="api-action-btn save-btn" bindtap="saveConfig">
+        💾 保存配置
+      </button>
+    </view>
+  </view>
+
+  <!-- 用户数据管理 -->
+  <view class="card">
+    <view class="section-title">👤 用户数据管理</view>
+    
+    <view class="stats" style="margin-bottom: 30rpx;">
+      <view class="stat-item">
+        <view class="stat-number">{{userTopics === -1 ? '无限' : userTopics}}</view>
+        <view class="stat-label">总主题数</view>
+      </view>
+      <view class="stat-item">
+        <view class="stat-number">{{usedTopicsCount}}</view>
+        <view class="stat-label">已使用</view>
+      </view>
+      <view class="stat-item">
+        <view class="stat-number">{{remainingTopics}}</view>
+        <view class="stat-label">剩余主题</view>
+      </view>
+    </view>
+    
+    <view class="settings-actions">
+      <button class="settings-action-btn" bindtap="toggleTestMode">
+        {{isTestMode ? '🧪 测试付费模式' : '🔄 切换到测试模式'}}
+      </button>
+      <button class="settings-action-btn" bindtap="resetUserData">🔄 重置用户数据</button>
+    </view>
+  </view>
+
+  <!-- 学习数据统计 -->
+  <view class="card">
+    <view class="section-title">📊 学习数据统计</view>
+    
+    <view class="stats" style="margin-bottom: 30rpx;">
+      <view class="stat-item">
+        <view class="stat-number">{{totalCachedTopics}}</view>
+        <view class="stat-label">缓存主题</view>
+      </view>
+      <view class="stat-item">
+        <view class="stat-number">{{totalQuestions}}</view>
+        <view class="stat-label">总问题数</view>
+      </view>
+    </view>
+    
+    <view class="stats" style="margin-bottom: 30rpx;">
+      <view class="stat-item">
+        <view class="stat-number">{{totalAnswered}}</view>
+        <view class="stat-label">已回答</view>
+      </view>
+      <view class="stat-item">
+        <view class="stat-number">{{totalHistoryRecords}}</view>
+        <view class="stat-label">历史记录</view>
+      </view>
+    </view>
+    
+    <view class="settings-actions">
+      <button class="settings-action-btn" bindtap="clearLearningCache">🗑️ 清空学习缓存</button>
+      <button class="settings-action-btn" bindtap="clearQAHistory">🗑️ 清空问答历史</button>
+    </view>
+  </view>
+
+  <!-- 数据管理 -->
+  <view class="card">
+    <view class="section-title">💾 数据管理</view>
+    
+    <view class="cache-info">
+      💡 您可以导出所有数据进行备份，或导入之前备份的数据
+    </view>
+    
+    <view class="settings-actions">
+      <button class="settings-action-btn" bindtap="exportAllData">📤 导出所有数据</button>
+      <button class="settings-action-btn" bindtap="importData">📥 导入数据</button>
+    </view>
+  </view>
+
+  <!-- 使用说明 -->
+  <view class="card">
+    <view class="section-title">📖 使用说明</view>
+    
+    <view style="font-size: 28rpx; line-height: 1.6; color: #4B5563;">
+      <view style="margin-bottom: 20rpx;">
+        <text style="font-weight: 600; color: #1F2937;">🔑 API配置：</text>
+        <text>\n配置您的AI API密钥后，所有主题都可以免费使用。推荐使用DeepSeek API，性价比最高。</text>
+      </view>
+      
+      <view style="margin-bottom: 20rpx;">
+        <text style="font-weight: 600; color: #1F2937;">💎 主题套餐：</text>
+        <text>\n如果没有API密钥，每个主题前3个问题免费，后续问题需要购买主题套餐。</text>
+      </view>
+      
+      <view style="margin-bottom: 20rpx;">
+        <text style="font-weight: 600; color: #1F2937;">🧪 测试模式：</text>
+        <text>\n开启测试模式可以体验付费功能，测试数据会被重置。</text>
+      </view>
+      
+      <view>
+        <text style="font-weight: 600; color: #1F2937;">💾 数据备份：</text>
+        <text>\n建议定期导出数据进行备份，避免数据丢失。</text>
+      </view>
+    </view>
+  </view>
+</view>

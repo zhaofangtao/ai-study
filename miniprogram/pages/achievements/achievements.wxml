@@ -1,0 +1,86 @@
+<!--pages/achievements/achievements.wxml-->
+<view class="container">
+  <!-- 页面标题 -->
+  <view class="header">
+    <view class="title">
+      <text class="logo">🏆</text>
+      <text class="title-text">学习成就</text>
+    </view>
+  </view>
+
+  <!-- 学习统计概览 -->
+  <view class="stats-overview">
+    <view class="stats-card">
+      <view class="stats-item">
+        <view class="stats-number">{{learningStats.totalQuestionsAnswered}}</view>
+        <view class="stats-label">已回答问题</view>
+      </view>
+      <view class="stats-item">
+        <view class="stats-number">{{learningStats.totalTopicsCompleted}}</view>
+        <view class="stats-label">完成主题</view>
+      </view>
+      <view class="stats-item">
+        <view class="stats-number">{{learningStats.streakDays}}</view>
+        <view class="stats-label">连续天数</view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 成就进度 -->
+  <view class="achievement-progress">
+    <view class="section-title-white">
+      <text class="section-icon">📊</text>
+      <text>成就进度</text>
+    </view>
+    <view class="progress-card-full">
+      <view class="progress-info-full">
+        <text class="progress-text-full">已解锁 {{unlockedAchievements}}/{{totalAchievements}} 个成就</text>
+        <view class="progress-bar-full">
+          <view class="progress-fill-full" style="width: {{(unlockedAchievements/totalAchievements)*100}}%"></view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 成就列表 -->
+  <view class="achievements-section">
+    <view class="section-title">
+      <text class="section-icon">🎖️</text>
+      <text>成就列表</text>
+    </view>
+    
+    <view class="achievements-list">
+      <view 
+        wx:for="{{achievements}}" 
+        wx:key="id" 
+        class="achievement-item {{item.unlocked ? 'unlocked' : 'locked'}}"
+        bindtap="shareAchievement"
+        data-id="{{item.id}}"
+      >
+        <view class="achievement-icon">{{item.icon}}</view>
+        <view class="achievement-info">
+          <view class="achievement-name">{{item.name}}</view>
+          <view class="achievement-desc">{{item.desc}}</view>
+          <view class="achievement-progress" wx:if="{{!item.unlocked}}">
+            <view class="progress-bar-small">
+              <view class="progress-fill-small" style="width: {{item.progressPercent}}%"></view>
+            </view>
+            <text class="progress-text-small">{{item.progress}}/{{item.target}}</text>
+          </view>
+        </view>
+        <view class="achievement-status">
+          <view wx:if="{{item.unlocked}}" class="status-unlocked">✓</view>
+          <view wx:else class="status-locked">🔒</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="actions">
+    <button class="action-btn reset-btn" bindtap="resetStats">
+      <text class="btn-icon">🔄</text>
+      <text>重置统计</text>
+    </button>
+  </view>
+</view>

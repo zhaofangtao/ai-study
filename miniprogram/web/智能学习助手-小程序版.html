@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>智能学习助手 - 小程序WebView版</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #1e293b;
+            padding: 10px;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            padding: 0;
+        }
+
+        /* 头部 */
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32rpx rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #1E3A8A;
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            color: #6B7280;
+            font-size: 14px;
+        }
+
+        /* 输入区域 */
+        .input-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32rpx rgba(0, 0, 0, 0.1);
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #1F2937;
+            font-size: 16px;
+        }
+
+        .input-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #E5E7EB;
+            border-radius: 8px;
+            font-size: 16px;
+            background: #F9FAFB;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .input-group textarea:focus {
+            border-color: #3B82F6;
+            outline: none;
+            background: white;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #3B82F6 0%, #1E40AF 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn:disabled {
+            background: #9CA3AF;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* 问题列表 */
+        .questions-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32rpx rgba(0, 0, 0, 0.1);
+        }
+
+        .question-item {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #3B82F6;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .question-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .question-text {
+            font-size: 16px;
+            color: #1F2937;
+            font-weight: 500;
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .question-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .question-info {
+            font-size: 12px;
+            color: #6B7280;
+        }
+
+        .answer-btn {
+            background: linear-gradient(135deg, #3B82F6 0%, #1E40AF 100%);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 12px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+        }
+
+        .answer-container {
+            margin-top: 15px;
+            padding: 15px;
+            background: #F8FAFC;
+            border-radius: 8px;
+            border: 1px solid #E2E8F0;
+        }
+
+        .answer-text {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #374151;
+        }
+
+        /* 流式输出指示器 */
+        .streaming-indicator {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #3B82F6;
+            border-radius: 50%;
+            animation: pulse 1.5s ease-in-out infinite;
+            margin-left: 5px;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 480px) {
+            body {
+                padding: 5px;
+            }
+            
+            .header h1 {
+                font-size: 20px;
+            }
+            
+            .input-section, .questions-container {
+                padding: 15px;
+            }
+            
+            .question-item {
+                padding: 12px;
+            }
+        }
+
+        /* 隐藏元素 */
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 头部 -->
+        <div class="header">
+            <h1>🧠 智能学习助手</h1>
+            <p>支持真正流式输出的Web版本</p>
+        </div>
+
+        <!-- 输入区域 -->
+        <div class="input-section">
+            <div class="input-group">
+                <label for="topicInput">输入学习主题：</label>
+                <textarea 
+                    id="topicInput" 
+                    placeholder="例如：深度学习基础、Python Web开发、UI设计原理..."
+                    maxlength="200"
+                ></textarea>
+            </div>
+            <button id="generateBtn" class="btn">🚀 开始生成学习问题</button>
+        </div>
+
+        <!-- 问题列表 -->
+        <div id="questionsContainer" class="questions-container hidden">
+            <h3 style="margin-bottom: 15px; color: #1F2937;">📝 学习问题列表</h3>
+            <div id="questionsList"></div>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量
+        let currentQuestions = [];
+        let questionCounter = 0;
+        let isGenerating = false;
+
+        // DOM元素
+        const topicInput = document.getElementById('topicInput');
+        const generateBtn = document.getElementById('generateBtn');
+        const questionsContainer = document.getElementById('questionsContainer');
+        const questionsList = document.getElementById('questionsList');
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            generateBtn.addEventListener('click', startLearning);
+            
+            // 从localStorage加载API配置
+            loadApiConfig();
+        });
+
+        // 加载API配置
+        function loadApiConfig() {
+            // 这里可以从小程序传递配置，或者使用默认配置
+            window.apiConfig = {
+                provider: 'deepseek',
+                apiKey: '', // 需要用户配置
+                baseUrl: 'https://api.deepseek.com/v1',
+                model: 'deepseek-chat'
+            };
+        }
+
+        // 开始学习
+        async function startLearning() {
+            const topic = topicInput.value.trim();
+            
+            if (!topic) {
+                alert('请输入学习主题');
+                return;
+            }
+
+            if (!window.apiConfig || !window.apiConfig.apiKey) {
+                alert('请先配置API密钥');
+                return;
+            }
+
+            isGenerating = true;
+            generateBtn.disabled = true;
+            generateBtn.textContent = '🔄 正在生成问题...';
+
+            try {
+                await generateQuestions(topic, 10);
+                questionsContainer.classList.remove('hidden');
+            } catch (error) {
+                alert('生成问题失败: ' + error.message);
+            } finally {
+                isGenerating = false;
+                generateBtn.disabled = false;
+                generateBtn.textContent = '🚀 开始生成学习问题';
+            }
+        }
+
+        // 生成问题
+        async function generateQuestions(topic, count) {
+            const prompt = `你是一个专业的学习顾问，用户想要深入学习"${topic}"。
+
+请生成${count}个高质量的学习问题：
+
+1. 问题应该从基础概念开始，逐步深入到实践应用
+2. 每个问题都要具体、可操作，能引导深度思考
+3. 问题之间要有逻辑递进关系
+4. 涵盖理论基础、实践应用、技能提升等维度
+
+请直接输出问题列表，每个问题一行，格式如下：
+1. 问题内容
+2. 问题内容
+...
+
+不要添加其他说明文字，只输出编号和问题内容。`;
+
+            const response = await callAI(prompt);
+            const questions = parseQuestions(response, topic);
+            
+            currentQuestions = questions;
+            renderQuestions();
+        }
+
+        // 调用AI
+        async function callAI(prompt) {
+            const response = await fetch(`${window.apiConfig.baseUrl}/chat/completions`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${window.apiConfig.apiKey}`
+                },
+                body: JSON.stringify({
+                    model: window.apiConfig.model,
+                    messages: [{ role: 'user', content: prompt }],
+                    temperature: 0.7,
+                    max_tokens: 2000
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`API请求失败: ${response.status}`);
+            }
+
+            const data = await response.json();
+            return data.choices[0]?.message?.content || '';
+        }
+
+        // 流式调用AI
+        async function callAIStream(prompt, onStream) {
+            const response = await fetch(`${window.apiConfig.baseUrl}/chat/completions`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${window.apiConfig.apiKey}`
+                },
+                body: JSON.stringify({
+                    model: window.apiConfig.model,
+                    messages: [{ role: 'user', content: prompt }],
+                    temperature: 0.7,
+                    max_tokens: 2000,
+                    stream: true
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`API请求失败: ${response.status}`);
+            }
+
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+            let buffer = '';
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+
+                buffer += decoder.decode(value, { stream: true });
+                const lines = buffer.split('\n');
+                buffer = lines.pop(); // 保留不完整的行
+
+                for (const line of lines) {
+                    if (line.startsWith('data: ')) {
+                        const data = line.slice(6);
+                        if (data === '[DONE]') return;
+                        
+                        try {
+                            const parsed = JSON.parse(data);
+                            const content = parsed.choices[0]?.delta?.content;
+                            if (content) {
+                                onStream(content);
+                            }
+                        } catch (e) {
+                            // 忽略解析错误
+                        }
+                    }
+                }
+            }
+        }
+
+        // 解析问题
+        function parseQuestions(response, topic) {
+            const lines = response.split('\n').filter(line => line.trim());
+            const questions = [];
+
+            lines.forEach((line, index) => {
+                const trimmed = line.trim();
+                if (/^\d+[.\s]/.test(trimmed)) {
+                    const question = trimmed.replace(/^\d+[.\s]*/, '').trim();
+                    if (question.length > 5) {
+                        questions.push({
+                            id: index + 1,
+                            question: question,
+                            topic: topic,
+                            answer: null,
+                            showAnswer: false,
+                            isGenerating: false
+                        });
+                    }
+                }
+            });
+
+            return questions;
+        }
+
+        // 渲染问题列表
+        function renderQuestions() {
+            questionsList.innerHTML = '';
+            
+            currentQuestions.forEach(item => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question-item';
+                questionDiv.innerHTML = `
+                    <div class="question-text">${item.question}</div>
+                    <div class="question-meta">
+                        <div class="question-info">问题 #${item.id}</div>
+                        <button class="answer-btn" onclick="toggleAnswer(${item.id})">
+                            ${item.showAnswer ? '收起' : (item.answer ? '展开' : '回答')}
+                        </button>
+                    </div>
+                    ${item.showAnswer ? `<div class="answer-container">
+                        <div class="answer-text" id="answer-${item.id}">
+                            ${item.isGenerating ? '正在生成答案<span class="streaming-indicator"></span>' : (item.answer || '')}
+                        </div>
+                    </div>` : ''}
+                `;
+                questionsList.appendChild(questionDiv);
+            });
+        }
+
+        // 切换答案显示
+        async function toggleAnswer(questionId) {
+            const question = currentQuestions.find(q => q.id === questionId);
+            if (!question) return;
+
+            if (!question.answer && !question.isGenerating) {
+                await generateAnswer(questionId);
+            } else {
+                question.showAnswer = !question.showAnswer;
+                renderQuestions();
+            }
+        }
+
+        // 生成答案（真正的流式输出）
+        async function generateAnswer(questionId) {
+            const question = currentQuestions.find(q => q.id === questionId);
+            if (!question) return;
+
+            question.isGenerating = true;
+            question.showAnswer = true;
+            question.answer = '';
+            renderQuestions();
+
+            const prompt = `请详细回答以下关于"${question.topic}"的问题：
+
+${question.question}
+
+请提供专业、详细、实用的回答，包含：
+1. 核心概念解释
+2. 具体的例子和案例
+3. 实践建议和操作步骤
+4. 相关的注意事项
+5. 进一步学习的方向
+
+回答要结构清晰，内容丰富，对学习者有实际帮助。`;
+
+            try {
+                await callAIStream(prompt, (content) => {
+                    question.answer += content;
+                    const answerElement = document.getElementById(`answer-${questionId}`);
+                    if (answerElement) {
+                        answerElement.innerHTML = question.answer + '<span class="streaming-indicator"></span>';
+                    }
+                });
+
+                question.isGenerating = false;
+                const answerElement = document.getElementById(`answer-${questionId}`);
+                if (answerElement) {
+                    answerElement.innerHTML = question.answer;
+                }
+            } catch (error) {
+                question.isGenerating = false;
+                question.answer = `生成答案失败: ${error.message}`;
+                renderQuestions();
+            }
+        }
+
+        // 与小程序通信
+        function postMessageToMiniProgram(data) {
+            if (window.wx && window.wx.miniProgram) {
+                wx.miniProgram.postMessage({ data: data });
+            }
+        }
+
+        // 监听小程序消息
+        window.addEventListener('message', function(event) {
+            const data = event.data;
+            if (data.type === 'setApiConfig') {
+                window.apiConfig = data.config;
+            }
+        });
+    </script>
+</body>
+</html>

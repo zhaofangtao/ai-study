@@ -1,0 +1,7 @@
+/* pages/webview/webview.wxss */
+
+/* WebView 全屏显示 */
+web-view {
+  width: 100%;
+  height: 100vh;
+}
