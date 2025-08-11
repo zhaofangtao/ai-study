@@ -57,7 +57,7 @@ export const API_PROVIDERS = {
     model: 'deepseek-chat'
   },
   DEEPSEEK_NVIDIA: {
-    name: 'DeepSeek NVIDIA',
+    name: 'DeepSeek R1',
     baseUrl: 'https://integrate.api.nvidia.com/v1',
     model: 'deepseek-ai/deepseek-r1'
   },

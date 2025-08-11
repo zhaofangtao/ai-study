@@ -20,6 +20,94 @@ export class AIService {
     await StorageService.setApiConfig(config);
   }
 
+  // 测试API连接
+  async testConnection() {
+    if (!this.config || !this.config.apiKey) {
+      throw new Error('请先配置AI API密钥');
+    }
+
+    const { provider, apiKey, baseUrl, model } = this.config;
+    
+    const headers = {
+      'Content-Type': 'application/json',
+    };
+
+    // 根据不同提供商设置认证头
+    if (provider === 'openai' || provider === 'deepseek' || provider === 'deepseek-nvidia') {
+      headers['Authorization'] = `Bearer ${apiKey}`;
+    } else if (provider === 'claude') {
+      headers['x-api-key'] = apiKey;
+      headers['anthropic-version'] = '2023-06-01';
+    }
+
+    // 构建简单的测试请求
+    const testPrompt = '请回答：1+1等于几？';
+    const requestBody = this.buildRequestBody(testPrompt, provider, model);
+    
+    console.log('测试连接配置:', {
+      provider,
+      baseUrl,
+      model,
+      hasApiKey: !!apiKey,
+      apiKeyPrefix: apiKey ? apiKey.substring(0, 8) + '...' : 'none'
+    });
+
+    try {
+      const response = await fetch(`${baseUrl}/chat/completions`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(requestBody)
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        let errorData = {};
+        try {
+          errorData = JSON.parse(errorText);
+        } catch (e) {
+          errorData = { message: errorText };
+        }
+        
+        console.error('连接测试失败:', {
+          status: response.status,
+          statusText: response.statusText,
+          errorData
+        });
+        
+        // 针对不同错误提供更具体的提示
+        if (response.status === 401) {
+          throw new Error('API密钥无效，请检查密钥是否正确');
+        } else if (response.status === 403) {
+          throw new Error('API访问被拒绝，请检查密钥权限或账户状态');
+        } else if (response.status === 404) {
+          throw new Error('API端点不存在，请检查基础URL和模型名称');
+        } else if (response.status === 429) {
+          throw new Error('API请求频率超限，请稍后重试');
+        } else {
+          throw new Error(`连接失败: ${response.status} ${errorData.error?.message || errorData.message || response.statusText}`);
+        }
+      }
+
+      const data = await response.json();
+      const content = this.extractResponse(data, provider);
+      
+      if (content && content.trim()) {
+        return {
+          success: true,
+          message: '连接成功',
+          response: content.trim()
+        };
+      } else {
+        throw new Error('API返回空响应，请检查配置');
+      }
+    } catch (error) {
+      if (error.name === 'TypeError' && error.message.includes('fetch')) {
+        throw new Error('网络连接失败，请检查网络连接和API地址');
+      }
+      throw error;
+    }
+  }
+
   // 生成学习问题
   async generateQuestions(topic, customPrompt = null) {
     if (!this.config || !this.config.apiKey) {
@@ -89,6 +177,15 @@ export class AIService {
 
     const requestBody = this.buildRequestBody(prompt, provider, model);
     
+    // 添加详细的错误日志
+    console.log('API请求配置:', {
+      url: `${baseUrl}/chat/completions`,
+      provider,
+      model,
+      hasApiKey: !!apiKey,
+      requestBody: { ...requestBody, messages: requestBody.messages?.map(m => ({ ...m, content: m.content?.substring(0, 100) + '...' })) }
+    });
+    
     const response = await fetch(`${baseUrl}/chat/completions`, {
       method: 'POST',
       headers,
@@ -96,8 +193,22 @@ export class AIService {
     });
 
     if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      throw new Error(`API请求失败: ${response.status} ${errorData.error?.message || response.statusText}`);
+      const errorText = await response.text();
+      let errorData = {};
+      try {
+        errorData = JSON.parse(errorText);
+      } catch (e) {
+        errorData = { message: errorText };
+      }
+      
+      console.error('API请求失败详情:', {
+        status: response.status,
+        statusText: response.statusText,
+        headers: Object.fromEntries(response.headers.entries()),
+        errorData
+      });
+      
+      throw new Error(`API请求失败: ${response.status} ${errorData.error?.message || errorData.message || response.statusText}`);
     }
 
     const data = await response.json();
@@ -187,16 +298,16 @@ export class AIService {
         messages: [{ role: 'user', content: prompt }]
       };
     } else if (provider === 'deepseek-nvidia') {
-      // 为DeepSeek NVIDIA添加特殊处理
+      // DeepSeek-R1 特殊处理
       return {
         ...baseBody,
         messages: [
-          { 
-            role: 'system', 
-            content: '你是一个专业的学习顾问助手。请直接回答问题，不要显示思考过程。' 
-          },
           { role: 'user', content: prompt }
-        ]
+        ],
+        // DeepSeek-R1 可能需要的额外参数
+        top_p: 0.9,
+        frequency_penalty: 0,
+        presence_penalty: 0
       };
     } else {
       return {

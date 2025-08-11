@@ -4,6 +4,7 @@ const { View, Text, TextInput, TouchableOpacity, ScrollView, StyleSheet, Alert }
 import { APP_CONFIG, API_PROVIDERS } from '../config/constants.js';
 import { StorageService } from '../services/storageService.js';
 import { AIService } from '../services/aiService.js';
+import { APIDebugger } from '../utils/apiDebugger.js';
 
 export default function SettingsPage({ onBack }) {
   const [apiConfig, setApiConfig] = useState({
@@ -69,19 +70,46 @@ export default function SettingsPage({ onBack }) {
 
     setIsTestingApi(true);
     try {
+      // 先进行配置诊断
+      const diagnosis = await APIDebugger.diagnoseConnection(apiConfig);
+      
+      if (diagnosis.issues.length > 0) {
+        const issueText = diagnosis.issues.join('\n');
+        const suggestionText = diagnosis.suggestions.join('\n');
+        Alert.alert(
+          '配置问题',
+          `发现以下问题:\n${issueText}\n\n建议:\n${suggestionText}`
+        );
+        return;
+      }
+
       const aiService = new AIService();
       await aiService.setConfig(apiConfig);
       
-      // 测试简单问题生成
-      const result = await aiService.generateQuestions('测试主题');
+      // 使用专门的连接测试方法
+      const result = await aiService.testConnection();
       
-      if (result && result.questions && result.questions.length > 0) {
-        Alert.alert('成功', `API连接正常，生成了${result.questions.length}个测试问题`);
+      if (result.success) {
+        Alert.alert(
+          '连接成功', 
+          `API连接正常！\n\n测试响应: ${result.response.substring(0, 100)}${result.response.length > 100 ? '...' : ''}`
+        );
       } else {
         Alert.alert('警告', 'API连接成功，但返回结果异常');
       }
     } catch (error) {
-      Alert.alert('失败', 'API测试失败：' + error.message);
+      console.error('API测试失败:', error);
+      
+      // 使用调试工具格式化错误信息
+      const friendlyError = APIDebugger.formatErrorMessage(error, apiConfig.provider);
+      const tips = APIDebugger.getProviderSpecificTips(apiConfig.provider);
+      
+      let alertMessage = friendlyError;
+      if (tips.length > 0) {
+        alertMessage += '\n\n建议检查:\n' + tips.slice(0, 3).join('\n');
+      }
+      
+      Alert.alert('连接失败', alertMessage);
     } finally {
       setIsTestingApi(false);
     }
